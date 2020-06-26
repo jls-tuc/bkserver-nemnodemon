@@ -1,0 +1,16 @@
+{
+    "name": "bkserver",
+    "version": "1.0.0",
+    "description": "api de acceso covid19",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "infotec",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1",
+        "mongoose": "^5.9.20"
+    }
+}
