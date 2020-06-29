@@ -2,18 +2,15 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const Token = require('../../config/util')
+const { Token } = require('../../config/util')
 
 const app = express();
-
 const Usuario = require('../models/usuario');
 
 app.post('/', (req, res) => {
 
     let body = req.body;
-
     Usuario.findOne({ email: body.email }, (err, usuarioDB) => {
-
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -40,9 +37,8 @@ app.post('/', (req, res) => {
 
         // Crear un token!!!
         usuarioDB.password = ':)';
-
         let token = jwt.sign({ usuario: usuarioDB }, Token, { expiresIn: 14400 }); // 4 horas
-
+        console.log(Token)
         res.status(200).json({
             ok: true,
             usuario: usuarioDB,

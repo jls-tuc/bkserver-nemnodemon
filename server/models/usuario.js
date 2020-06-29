@@ -16,6 +16,7 @@ let usuarioSchema = new Schema({
     password: { type: String, required: [true, 'El password es necesario'] },
     imagen: { type: String, required: false },
 }, {
+    collection: 'usuario',
     timestamps: true
 });
 usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });

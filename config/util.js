@@ -1,1 +1,1 @@
-module.exports.token = ':34mZ)pDdC+U=2bXw_{#f';
+module.exports.Token = ':34mZ)pDdC+U=2bXw_{#f';

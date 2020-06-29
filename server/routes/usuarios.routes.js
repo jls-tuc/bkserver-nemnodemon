@@ -33,6 +33,33 @@ app.get('/', (req, res, next) => {
             });
 });
 
+app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+    let body = req.body;
+    let usuario = new Usuario({
+        nombre: body.nombre,
+        apellido: body.apellido,
+        usuario: body.usuario,
+        email: body.email,
+        password: bcrypt.hashSync(body.password, 10),
+        img: body.img,
+        role: body.role
+    });
+    usuario.save((err, usuarioGuardado) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al crear usuario',
+                errors: err
+            });
+        }
+        res.status(201).json({
+            ok: true,
+            usuario: usuarioGuardado,
+            usuariotoken: req.usuario
+        });
+    });
+
+});
 app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
     let id = req.params.id;
@@ -82,33 +109,6 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
-    let body = req.body;
-    let usuario = new Usuario({
-        nombre: body.nombre,
-        apellido: body.apellido,
-        usuario: body.usuario,
-        email: body.email,
-        password: bcrypt.hashSync(body.password, 10),
-        img: body.img,
-        role: body.role
-    });
-    usuario.save((err, usuarioGuardado) => {
-        if (err) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: 'Error al crear usuario',
-                errors: err
-            });
-        }
-        res.status(201).json({
-            ok: true,
-            usuario: usuarioGuardado,
-            usuariotoken: req.usuario
-        });
-    });
-
-});
 app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
     let id = req.params.id;
     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {

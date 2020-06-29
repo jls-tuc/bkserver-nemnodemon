@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 
-const Token = require('../util');
+const { Token } = require('../util');
 
 
 exports.verificaToken = function(req, res, next) {
 
-    var token = req.query.token;
+    let token = req.query.token;
 
     jwt.verify(token, Token, (err, decoded) => {
 
