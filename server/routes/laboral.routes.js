@@ -7,7 +7,14 @@ const Laboral = require('../models/laboral')
 
 app.get('/', (req, res, next) => {
 
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
     Laboral.find({}, ) //pido lo que quiero ver
+        .skip(desde)
+        .limit(10)
+        .populate('persona')
+        .populate('usuario')
         .exec(
             (err, laborales) => {
 
@@ -18,13 +25,20 @@ app.get('/', (req, res, next) => {
                         errors: err
                     });
                 }
-
-                res.status(200).json({
-                    ok: true,
-                    laborales: laborales
-                });
-
-
+                Laboral.count({}, (err, conteo) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error cargando el conteo de los datos laborales',
+                            errors: err
+                        });
+                    }
+                    res.status(200).json({
+                        ok: true,
+                        laborales: laborales,
+                        total: conteo
+                    });
+                })
 
             });
 });

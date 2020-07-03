@@ -11,7 +11,13 @@ const Usuario = require('../models/usuario');
 
 app.get('/', (req, res, next) => {
 
+    let desde = req.query.desde || 0; //variable que espera un valor para paginar
+    desde = Number(desde); //fuerzo que sea numero
+
     Usuario.find({}, 'nombre apellido usuario email img role') //pido lo que quiero ver
+
+    .skip(desde) //salta el valor desde (muestra el valor desde ej 10 muestra desde el 11)
+        .limit(10)
         .exec(
             (err, usuarios) => {
 
@@ -22,14 +28,21 @@ app.get('/', (req, res, next) => {
                         errors: err
                     });
                 }
+                Usuario.count({}, (err, conteo) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error cargando usuario',
+                            errors: err
+                        });
+                    }
 
-                res.status(200).json({
-                    ok: true,
-                    usuarios: usuarios
+                    res.status(200).json({
+                        ok: true,
+                        usuarios: usuarios,
+                        total: conteo
+                    });
                 });
-
-
-
             });
 });
 

@@ -11,6 +11,7 @@ const Edificio = require('../models/edificio');
 app.get('/', (req, res, next) => {
 
     Edificio.find({}, 'nombre localidad direccion img ') //pido lo que quiero ver
+        .populate('usuario', 'nombre')
         .exec(
             (err, edificios) => {
 
@@ -21,10 +22,21 @@ app.get('/', (req, res, next) => {
                         errors: err
                     });
                 }
+                Edificio.count({}, (err, conteo) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error cargando edificio',
+                            errors: err
+                        });
+                    }
+                    res.status(200).json({
+                        ok: true,
+                        edificios: edificios,
+                        total: conteo
+                    });
 
-                res.status(200).json({
-                    ok: true,
-                    edificios: edificios
+
                 });
 
 

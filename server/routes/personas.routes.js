@@ -7,7 +7,12 @@ const Persona = require('../models/personas');
 
 app.get('/', (req, res, next) => {
 
+    let desde = req.query.desde || 0; //variable que espera un valor para paginar
+    desde = Number(desde); //fuerzo que sea numero
+
     Persona.find({}, 'nombre apellido documento localidad direccion img ') //pido lo que quiero ver
+        .skip(desde) //salta el valor desde (muestra el valor desde ej 10 muestra desde el 11)
+        .limit(10)
         .exec(
             (err, personas) => {
 
@@ -18,11 +23,22 @@ app.get('/', (req, res, next) => {
                         errors: err
                     });
                 }
+                Persona.count({}, (err, conteo) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error al realizar el conteo',
+                            errors: err
+                        });
+                    }
+                    res.status(200).json({
+                        ok: true,
+                        personas: personas,
+                        total: conteo
+                    });
 
-                res.status(200).json({
-                    ok: true,
-                    personas: personas
-                });
+                })
+
 
 
 
