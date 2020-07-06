@@ -10,6 +10,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
+
+
+
+
+
+// Serve index config
+
+/* var serveIndex = require ('serve-index');
+app.use (express.static(_dirname + '/'))
+app.use( './server/uploads',serveIndex(__dirname + './server/uploads')); */
+
 //rutas importadas desde la carpeta Server/routes 
 const appRoutes = require('./server/routes/routes')
 const usuarioRoutes = require('./server/routes/usuarios.routes')
@@ -18,7 +29,9 @@ const loginRoutes = require('./server/routes/login.routes')
 const personaRoutes = require('./server/routes/personas.routes')
 const laboralRoutes = require('./server/routes/laboral.routes')
 const registroRoutes = require('./server/routes/registro.routes')
-
+const uploadRoutes = require('./server/routes/uploads')
+const imgRoutes = require('./server/routes/img.routes')
+const servWeb = require('./server/routes/ws.routes')
 
 
 
@@ -29,6 +42,9 @@ app.use('/login', loginRoutes);
 app.use('/persona', personaRoutes);
 app.use('/laboral', laboralRoutes);
 app.use('/registro', registroRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/img', imgRoutes);
+app.use('/servicio', servWeb);
 app.use('/', appRoutes);
 
 
