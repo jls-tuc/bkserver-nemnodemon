@@ -137,7 +137,7 @@ function subirTipo(tipo, id, nombreArchivo, res) {
             if (fs.existsSync(pathViejo)) {
                 fs.unlinkSync(pathViejo);
             }
-            usuario.imagen = nombreArchivo;
+            usuario.img = nombreArchivo;
             usuario.save((err, usuarioActualizado) => {
                 usuarioActualizado.password = ';)'
                 if (err) {

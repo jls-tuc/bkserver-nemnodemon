@@ -6,14 +6,17 @@ const servrrhh = require('../../ws/wsTrabajo');
 
 
 app.get('/renaper', async(req, res, next) => {
-    console.log("Entra a renaper");
+    //console.log("Entra a renaper");
     let persona = {
-        documento: '28234579',
-        sexo: 'F' //Mayuscula
+        documento: req.query.documento,
+        sexo: req.query.sexo //Mayuscula
     }
-    let renaper = servicio.getServicioRenaper(persona);
-    console.log("Renaperrr: ", renaper);
+    let renaper = await servicio.getServicioRenaper(persona);
+    res.json(renaper);
 });
+
+
+
 
 app.get('/rrhh', async(req, res, next) => {
     console.log("Entra rrhh ");

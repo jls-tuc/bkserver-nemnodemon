@@ -45,8 +45,8 @@ app.get('/', (req, res, next) => {
                 });
             });
 });
-
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+//mdAutenticacion.verificaToken,
+app.post('/', (req, res) => {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,

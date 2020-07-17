@@ -14,7 +14,7 @@ let usuarioSchema = new Schema({
     email: { type: String, unique: true, required: [true, 'El correo es necesario'] },
     role: { type: String, required: true, default: 'USER_ROLE', enum: rolesValidos },
     password: { type: String, required: [true, 'El password es necesario'] },
-    imagen: { type: String, required: false },
+    img: { type: String, required: false },
 }, {
     collection: 'usuario',
     timestamps: true

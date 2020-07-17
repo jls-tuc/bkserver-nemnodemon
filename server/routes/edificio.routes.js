@@ -6,12 +6,45 @@ const Edificio = require('../models/edificio');
 
 
 
+app.get('/:id', (req, res, next) => {
 
+    let id = req.params.id;
+
+    Edificio.findById({}, 'nombre localidad direccion img ') //pido lo que quiero ver
+        .populate('usuario', 'nombre')
+        .exec(
+            (err, edificio) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error cargando edificio ' + id,
+                        errors: err
+                    });
+                }
+                Edificio.count({}, (err, conteo) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error cargando edificio',
+                            errors: err
+                        });
+                    }
+                    res.status(200).json({
+                        ok: true,
+                        edificio: edificio,
+                        total: conteo
+                    });
+
+                });
+
+            });
+});
 
 app.get('/', (req, res, next) => {
 
     Edificio.find({}, 'nombre localidad direccion img ') //pido lo que quiero ver
-        .populate('usuario', 'nombre')
+        .populate('usuario', 'usuario')
         .exec(
             (err, edificios) => {
 
