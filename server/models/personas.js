@@ -22,7 +22,7 @@ const personaSchema = new Schema({
     pais: { type: String, es_indexed: true, require: [true, 'Debe ingresar el nombre del pais'] },
     img: { type: String, require: false },
     origenf: { type: String, require: false },
-    usuario: { type: Schema.Types.ObjectId, ref: 'Usuario' }
+    usuario: { type: Schema.Types.ObjectId, required: true, ref: 'Usuario' }
 }, {
     collection: 'persona',
     timestamps: true

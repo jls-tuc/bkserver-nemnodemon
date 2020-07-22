@@ -7,8 +7,8 @@ const laboralSchema = new Schema({
     n_empleado: { type: String, es_indexes: true, require: [true, 'Debe ingresar el numero de empleado'] },
     presta_servicio: { type: String, es_indexes: true, require: [true, 'Debe ingresar el nombre del lugar donde presta el servicio'] },
     telefono_empelador: { type: String, require: [true, 'Debe ingresar el numero de telefo '] },
-    persona: { type: Schema.Types.ObjectId, ref: 'Persona' },
-    usuario: { type: Schema.Types.ObjectId, ref: 'Usuario' }
+    persona: { type: Schema.Types.ObjectId, required: true, ref: 'Persona' },
+    usuario: { type: Schema.Types.ObjectId, required: true, ref: 'Usuario' }
 }, {
     collection: 'laboral',
     timestamps: true

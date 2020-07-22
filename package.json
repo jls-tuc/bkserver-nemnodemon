@@ -4,8 +4,8 @@
     "description": "api de acceso covid19",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon app.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start:dev": "nodemon app.js"
+
     },
     "author": "infotec",
     "license": "ISC",

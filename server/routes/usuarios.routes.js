@@ -9,7 +9,7 @@ const app = express();
 const Usuario = require('../models/usuario');
 
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res, ) => {
 
     let desde = req.query.desde || 0; //variable que espera un valor para paginar
     desde = Number(desde); //fuerzo que sea numero

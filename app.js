@@ -1,18 +1,15 @@
+require('dotenv').config();
 const express = require('express');
-const bd = require('./conexion_bd');
+const { dbConnection } = require('./db/conexion_bd');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // inicia el servidor
 const app = express();
-
-
+// base de datos
+dbConnection();
 // cors
-app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", 'Content-Type, X-Requested-With');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    next();
-});
+app.use(cors());
 // handle OPTIONS requests from the browser
 app.options("*", function(req, res, next) { res.send(200); });
 
@@ -45,10 +42,14 @@ const registroRoutes = require('./server/routes/registro.routes')
 const uploadRoutes = require('./server/routes/uploads')
 const imgRoutes = require('./server/routes/img.routes')
 const servWeb = require('./server/routes/ws.routes')
+const accesoRoutes = require('./server/routes/acceso.routes')
+const sectorRoutes = require('./server/routes/sector.routes')
 
 
 
 //Rutas para el acceso desde la APP
+app.use('/acceso', accesoRoutes)
+app.use('/sector', sectorRoutes)
 app.use('/usuario', usuarioRoutes);
 app.use('/edificio', edificioRoutes);
 app.use('/login', loginRoutes);
@@ -65,8 +66,8 @@ app.use('/', appRoutes);
 
 
 // declarar puerto
-app.listen(8017, () => {
-    console.log('Express server puerto 8017: \x1b[32m%s\x1b[0m', 'online')
+app.listen(process.env.PORT, () => {
+    console.log('Express server puerto =', process.env.PORT, '\x1b[32m :online\x1b[0m')
 });
 
 module.exports = app;
