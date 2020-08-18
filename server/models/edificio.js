@@ -8,8 +8,8 @@ const edificioSchema = new Schema({
     direccion: { type: String, require: [true, 'Debe ingresar el nombre'] },
     img: { type: String, require: false },
     usuario: { type: Schema.Types.ObjectId, required: true, ref: 'Usuario' },
-    sector: { type: Schema.Types.ObjectId, required: true, ref: 'Sector' },
-    acceso: { type: Schema.Types.ObjectId, required: true, ref: 'Acceso' }
+    sector: [{ type: Schema.Types.ObjectId, required: true, ref: 'Sector' }],
+    acceso: [{ type: Schema.Types.ObjectId, required: true, ref: 'Acceso' }]
 }, {
     collection: 'edificio',
     timestamps: true

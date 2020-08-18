@@ -17,8 +17,7 @@ const getAcceso = async(req, res = response) => {
 
 const getAccesoById = async(req, res = response) => {
     const id = req.params.id;
-    console.log(id)
-
+    
     try {
         const acceso = await Acceso.findById(id)
             .populate('usuario', 'nombre img');
@@ -36,7 +35,7 @@ const getAccesoById = async(req, res = response) => {
     }
 }
 
-const crearAcceso = async(req, res = response) => {
+const crearAcceso = async (req, res = response) => {
     let body = req.body;
     const acceso = new Acceso({
         nombre: body.nombre,

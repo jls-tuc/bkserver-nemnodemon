@@ -3,15 +3,18 @@ const app = express();
 const mdAutenticacion = require('../../config/middlewares/auth');
 
 const Edificio = require('../models/edificio');
+const { findByIdAndUpdate } = require('../models/edificio');
 
 
 
 app.get('/:id', (req, res, next) => {
 
     let id = req.params.id;
-
-    Edificio.findById({}, 'nombre localidad direccion img ') //pido lo que quiero ver
+try {
+    Edificio.findById((id), 'nombre localidad direccion img ') //pido lo que quiero ver
         .populate('usuario', 'nombre')
+        .populate('sector')
+        .populate('acceso')
         .exec(
             (err, edificio) => {
 
@@ -22,23 +25,24 @@ app.get('/:id', (req, res, next) => {
                         errors: err
                     });
                 }
-                Edificio.count({}, (err, conteo) => {
-                    if (err) {
-                        return res.status(500).json({
-                            ok: false,
-                            mensaje: 'Error cargando edificio',
-                            errors: err
-                        });
-                    }
-                    res.status(200).json({
-                        ok: true,
-                        edificio: edificio,
-                        total: conteo
-                    });
-
-                });
+                 res.status(200).json({
+                  ok: true,
+                  edificio: edificio,
+                 });
 
             });
+
+                
+} catch (error) {
+    console.log(error)
+        res.status(500).json({
+            ok: true,
+            msg: 'Error la buscar los datos verifique el ID',
+            error
+        })
+    
+}
+    
 });
 
 app.get('/', (req, res, next) => {
@@ -77,64 +81,41 @@ app.get('/', (req, res, next) => {
             });
 });
 
-app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+app.put('/:id', mdAutenticacion.verificaToken, async (req, res = response) => {
 
     let id = req.params.id;
     let body = req.body;
+try {
+    cambEdi ={
+         ...req.body,
+        usuario: req.usuario._id
+    }
+    const newEdificio = await Edificio.findOneAndUpdate (id,cambEdi,{ new: true })
+    res.json({
+        ok: true,
+        edificio: newEdificio
+    })
+} catch (error) {
+    console.log(error);
+    res.status(500).json({
+        ok: false,
+        msg: 'Verificar los datos enviados',
+        error
+    })
 
-    Edificio.findById(id, (err, edificio) => {
+}
 
-
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error al buscar Edificio',
-                errors: err
-            });
-        }
-
-        if (!edificio) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: 'El edificio con el id ' + id + ' no existe',
-                errors: { message: 'No existe un edificio con ese ID' }
-            });
-        }
-        edificio.nombre = body.nombre;
-        edificio.localidad = body.localidad;
-        edificio.direccion = body.direccion;
-        edificio.usuario = req.usuario._id;
-
-        edificio.save((err, edificioGuardado) => {
-
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'Error al actualizar edificio',
-                    errors: err
-                });
-            }
-
-
-            res.status(200).json({
-                ok: true,
-                edificio: edificioGuardado
-            });
-
-        });
-
-    });
 });
 
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+app.post('/', mdAutenticacion.verificaToken,async (req, res) => {
     let body = req.body;
     let edificio = new Edificio({
-        nombre: body.nombre,
-        localidad: body.localidad,
-        direccion: body.direccion,
-        usuario: req.usuario._id
+        ... req.body,
+         usuario: req.usuario._id,
+        
     });
-    edificio.save((err, edificioGuardado) => {
+    console.log (edificio)
+    await edificio.save((err, edificioGuardado) => {
         if (err) {
             return res.status(400).json({
                 ok: false,

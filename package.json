@@ -5,7 +5,6 @@
     "main": "index.js",
     "scripts": {
         "start:dev": "nodemon app.js"
-
     },
     "author": "infotec",
     "license": "ISC",
@@ -21,6 +20,7 @@
         "mongoose": "^5.9.20",
         "mongoose-unique-validator": "^2.0.3",
         "serve-index": "^1.9.1",
-        "soap": "^0.31.0"
+        "soap": "^0.31.0",
+        "uuid": "^8.3.0"
     }
 }

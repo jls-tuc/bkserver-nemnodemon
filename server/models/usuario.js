@@ -39,11 +39,7 @@ const usuarioSchema = new Schema({
         type: String,
         required: false
     },
-    usuario: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Usuario'
-    }
+
 }, {
     collection: 'usuario',
     timestamps: true

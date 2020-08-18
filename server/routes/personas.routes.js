@@ -3,6 +3,7 @@ const app = express();
 const mdAutenticacion = require('../../config/middlewares/auth');
 
 const Persona = require('../models/personas');
+const { response } = require('./routes');
 
 
 app.get('/', (req, res, next) => {
@@ -151,6 +152,10 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
     });
 });
+
+
+
+
 app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
     let id = req.params.id;
     Persona.findByIdAndRemove(id, (err, personaBorrada) => {

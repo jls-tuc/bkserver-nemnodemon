@@ -1,80 +1,39 @@
-const express = require('express');
-const app = express();
+const { Router } = require('express');
+const { getRegistro, getRegistroById, crearRegistro, updateRegistro, deleteRegistro } = require('../controllers/registro.controllers')
+const { check } = require('express-validator');
+const { validarCampos } = require('../../config/middlewares/validar-campos');
 const mdAutenticacion = require('../../config/middlewares/auth');
+const router = Router();
 
 
-const Registro = require('../models/registro')
+router.get('/', [mdAutenticacion.verificaToken], getRegistro);
 
-app.get('/', (req, res, next) => {
+router.get('/:id', [mdAutenticacion.verificaToken], getRegistroById);
 
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
+router.post('/', [mdAutenticacion.verificaToken,
+    check('estado', 'El estado  es necesario').not().isEmpty(),
+    check('tipo_registro', 'El tipo de registro  es necesario').not().isEmpty(),
+    check('temperatura', 'La temperatura  es necesaria').not().isEmpty(),
+    check('fechahora', 'La fecha y hora necesaria para crear el regisro').not().isEmpty(),
+    check('persona', 'La persona id debe de ser válido').not().isEmpty(),
+    check('usuario', 'El usuario id debe de ser válido').not().isEmpty(),
+    check('edificio', 'El edificio id debe de ser válido').not().isEmpty(),
+    validarCampos
+], crearRegistro)
 
-    Registro.find({}, ) //pido lo que quiero ver
-        .skip(desde)
-        .limit(10)
-        .populate('usuairo', 'nombre')
-        .populate('edificio')
-        .populate('perosna')
-        .exec(
-            (err, registros) => {
+router.post('/:id', [mdAutenticacion.verificaToken,
+    check('estado', 'El estado  es necesario').not().isEmpty(),
+    check('tipo_registro', 'El tipo de registro  es necesario').not().isEmpty(),
+    check('temperatura', 'La temperatura  es necesaria').not().isEmpty(),
+    check('fechahora', 'La fecha y hora necesaria para crear el regisro').not().isEmpty(),
+    check('persona', 'La persona id debe de ser válido').not().isEmpty(),
+    check('usuario', 'El usuario id debe de ser válido').not().isEmpty(),
+    check('edificio', 'El edificio id debe de ser válido').not().isEmpty(),
+    validarCampos
+], updateRegistro)
 
-                if (err) {
-                    return res.status(500).json({
-                        ok: false,
-                        mensaje: 'Error cargando los datos registros solicitados',
-                        errors: err
-                    });
-                }
-                Registro.count({}, (err, conteo) => {
-                    if (err) {
-                        return res.status(500).json({
-                            ok: false,
-                            mensaje: 'Error cargando el conteo de los datos almacenados',
-                            errors: err
-                        });
-                    }
-                    res.status(200).json({
-                        ok: true,
-                        registros: registros,
-                        total: conteo
-                    });
-                });
-            });
-});
+router.delete('/:id', [
+    mdAutenticacion.verificaToken
+], deleteRegistro);
 
-
-
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
-    let body = req.body;
-    let registro = new Registro({
-
-        tipo_registro: body.tipo_registro.toLowerCase(),
-        estado: body.estado,
-        temperatura: temperatura.body.estado,
-        persona: body.persona,
-        usuario: req.usuario._id,
-        edificio: body.edificio
-    });
-    registro.save((err, registroGuardado) => {
-        if (err) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: 'Error al crear el nuevo registro',
-                errors: err
-            });
-        }
-        res.status(201).json({
-            ok: true,
-            registro: registroGuardado,
-
-        });
-    });
-
-});
-
-
-
-
-
-module.exports = app;
+module.exports = router;

@@ -16,11 +16,11 @@ app.options("*", function(req, res, next) { res.send(200); });
 
 
 // Parse
-app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json())
-
-
-
 
 
 
@@ -39,12 +39,11 @@ const loginRoutes = require('./server/routes/login.routes')
 const personaRoutes = require('./server/routes/personas.routes')
 const laboralRoutes = require('./server/routes/laboral.routes')
 const registroRoutes = require('./server/routes/registro.routes')
-const uploadRoutes = require('./server/routes/uploads')
-const imgRoutes = require('./server/routes/img.routes')
+const uploadRoutes = require('./server/routes/uploads.routes')
 const servWeb = require('./server/routes/ws.routes')
 const accesoRoutes = require('./server/routes/acceso.routes')
 const sectorRoutes = require('./server/routes/sector.routes')
-
+const busquedaRoutes = require('./server/routes/busquedas.routes')
 
 
 //Rutas para el acceso desde la APP
@@ -57,8 +56,9 @@ app.use('/persona', personaRoutes);
 app.use('/laboral', laboralRoutes);
 app.use('/registro', registroRoutes);
 app.use('/upload', uploadRoutes);
-app.use('/img', imgRoutes);
 app.use('/servicio', servWeb);
+app.use('/busqueda', busquedaRoutes);
+
 app.use('/', appRoutes);
 
 
