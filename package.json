@@ -17,8 +17,10 @@
         "express-fileupload": "^1.1.7-alpha.3",
         "express-validator": "^6.6.0",
         "jsonwebtoken": "^8.5.1",
+        "moment": "^2.27.0",
         "mongoose": "^5.9.20",
         "mongoose-unique-validator": "^2.0.3",
+        "nodemon": "^2.0.4",
         "serve-index": "^1.9.1",
         "soap": "^0.31.0",
         "uuid": "^8.3.0"
