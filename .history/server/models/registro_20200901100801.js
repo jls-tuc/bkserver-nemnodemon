@@ -4,11 +4,7 @@ const Schema = mongoose.Schema;
 
 const registroSchema = new Schema({
     nroRegistro: { type: Number, unique: true },
-<<<<<<< HEAD
-    fecha: { type: Date, default: Date.now },
-=======
     fecha: { type: Date, default: () => Date.now },
->>>>>>> eae98e95944dff4123f47ccfa9462a6d150c1c97
     tipo_registro: {
         type: String,
         requiere: true,
@@ -31,14 +27,11 @@ const registroSchema = new Schema({
         fechaNacimiento: String,
         sexo: constantes.SEXO,
         telefono: { type: String, lowercase: true },
-<<<<<<< HEAD
-=======
         email: {
             type: String,
             unique: true,
             required: [true, "El correo es necesario"],
         },
->>>>>>> eae98e95944dff4123f47ccfa9462a6d150c1c97
         domicilio: { type: String, lowercase: true },
         localidad: { type: String, lowercase: true },
         img: { type: String },
