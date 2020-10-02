@@ -1,9 +1,9 @@
 const { response } = require("express");
 
-const Usuario = require("../models/usuario");
-const Persona = require("../models/personas");
-const Edificio = require("../models/edificio");
-const Registro = require("../models/registro");
+const Usuario = require("../../models/usuario");
+const Persona = require("../../models/personas");
+const Edificio = require("../../models/edificio");
+const Registro = require("../../models/registro");
 
 const getTodo = async(req, res = response) => {
     const busqueda = req.params.busqueda;
@@ -72,10 +72,10 @@ const getDocumentosColeccion = async(req, res) => {
 
 const dniGet = async(req, res = response) => {
     const dni = req.params.dni;
-    console.log("Buscando DNI");
+    console.log(dni);
     try {
-        await Persona.findOne({ documento: dni },
-            "nombre apellido  sexo documento img calle numero localidad fechaNacimiento datos_contacto domicilio_postal",
+        const personaDni = await Persona.findOne({ documento: dni },
+            "nombre apellido documento cuil localidad calle numero img fechaNacimiento sexo",
             function(err, results) {
                 if (err) {
                     res.status(500).json({
