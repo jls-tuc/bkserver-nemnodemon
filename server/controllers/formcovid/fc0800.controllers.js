@@ -116,7 +116,11 @@ const getFormById = async(req, res = response) => {
 const postForm = async(req, res = response, next) => {
     moment.locale("es");
     req.body.fecha = moment().format("YYYY/MM/DD");
+<<<<<<< HEAD
   //  console.log(req.body.fecha);
+=======
+    console.log(req.body.fecha);
+>>>>>>> bf153e8855648d5cb0bac6a3e9b71f86bb57f261
     let ultimoNroRegistro = await Fc0800.findOne()
         .sort({ field: "asc", _id: -1 })
         .limit(1);
