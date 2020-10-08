@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const Schema = require("mongoose").Schema;
 const rolesValidos = {
-  values: ["ADMIN_ROLE", "USER_ROLE"],
+  values: ["ADMIN_ROLE", "USER_ROLE", "SYSTEM_ROLE"],
   message: "{VALUE} no es un rol permitido",
 };
 

@@ -1,13 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Usuario = require("../models/usuario");
+const Usuario = require("../../models/usuario");
+const { getMenu } = require("../../../config/helpers/menu-front");
 const app = express();
 
 app.post("/", async (req, res) => {
   let body = req.body;
-
-  await Usuario.findOne({ documento: body.documento }, (err, usuarioDB) => {
+  //console.log(req.body);
+  await Usuario.findOne({ documento: req.body.documento }, (err, usuarioDB) => {
     if (err) {
       return res.status(500).json({
         ok: false,
@@ -53,8 +54,26 @@ app.post("/", async (req, res) => {
       usuario: { role, picture, nombre, apellido, lastLogin, organismo },
       token: token,
       id: usuarioDB._id,
+      menu: getMenu(usuarioDB.role),
     });
     console.log(usuarioDB.documento, "\x1b[35mUsuario online\x1b[0m");
+  });
+});
+
+app.get("/", async (req, res = response) => {
+  //cconsole.log("id" ,req.body.id)
+  const id = req.id;
+
+  /* // Generar el TOKEN - JWT
+       const token = await generarJWT( id ); */
+
+  // Obtener el usuario por UID
+  const usuario = await Usuario.findById(id);
+
+  res.json({
+    ok: true,
+    usuario,
+    // menu: getMenuFrontEnd( usuario.role )
   });
 });
 

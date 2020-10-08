@@ -3,7 +3,12 @@ const uniqueValidator = require("mongoose-unique-validator");
 const Schema = mongoose.Schema;
 
 const personaSchema = new Schema({
-    nombre: {
+    ID_TRAMITE_PRINCIPAL:{type: String},
+    ID_TRAMITE_TARJETA_REIMPRESA:{type: String},
+    EJEMPLAR:{type: String},
+    vencimiento:{type:String},
+    emision:{type:String},
+    nombres: {
         type: String,
         es_indexed: true,
         require: [true, "Debe ingresar el nombre"],
@@ -52,12 +57,12 @@ const personaSchema = new Schema({
     },
     barrio: { type: String, es_indexed: true, require: false },
     monoblock: { type: String, es_indexed: true, require: false },
-    zona: {
+    ciudad: {
         type: String,
         es_indexed: true,
         require: [true, "Debe ingresar el nombre del departamento"],
     },
-    localidad: {
+    municipio: {
         type: String,
         es_indexed: true,
         require: [true, "Debe ingresar el nombre de la localidad"],
@@ -72,7 +77,8 @@ const personaSchema = new Schema({
         es_indexed: true,
         require: [true, "Debe ingresar el nombre del pais"],
     },
-    img: { type: String, require: false },
+    idciudadano: {type: String},
+    foto: { type: String, require: false },
     origenf: { type: String, require: false },
     datos_contacto: {
         telefono: { type: String, require: true },
@@ -91,7 +97,7 @@ const personaSchema = new Schema({
         localidad: { type: String, es_indexed: true, require: false },
         provincia: { type: String, es_indexed: true, require: false },
     },
-    usuario: { type: Schema.Types.ObjectId, required: true, ref: "Usuario" },
+    
 }, {
     collection: "persona",
     timestamps: true,

@@ -36,13 +36,11 @@ app.use( './server/uploads',serveIndex(__dirname + './server/uploads')); */
   const busquedaRoutes = require("./server/routes/commons/busquedas.routes");
   const localidadesRoutes = require("./server/routes/commons/localidades.routes");
   const form0800Router = require("./server/routes/form0800.routes");
-  const reg_0800Router = require("./server/routes/0800/Reg_llamada.routes");
   const exportRoutes = require("./server/routes/export.routes");
 
   //Rutas para el acceso desde la APP
   app.use("/localidades", localidadesRoutes);
   app.use("/form", form0800Router);
-  app.use("/llamada", reg_0800Router);
   app.use("/usuario", usuarioRoutes);
   app.use("/login", loginRoutes);
   app.use("/persona", personaRoutes);

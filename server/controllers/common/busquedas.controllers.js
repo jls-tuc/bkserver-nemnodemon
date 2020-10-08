@@ -1,9 +1,9 @@
 const { response } = require("express");
-
 const Usuario = require("../../models/usuario");
 const Persona = require("../../models/personas");
 const Edificio = require("../../models/edificio");
 const Registro = require("../../models/registro");
+const Fc0800 = require("../../models/formcovid/fc0800")
 
 const getTodo = async(req, res = response) => {
     const busqueda = req.params.busqueda;
@@ -72,7 +72,7 @@ const getDocumentosColeccion = async(req, res) => {
 
 const dniGet = async(req, res = response) => {
     const dni = req.params.dni;
-    console.log(dni);
+    // console.log(dni);
     try {
         const personaDni = await Persona.findOne({ documento: dni },
             "nombre apellido documento cuil localidad calle numero img fechaNacimiento sexo",
@@ -98,9 +98,48 @@ const dniGet = async(req, res = response) => {
         });
     }
 };
+const form = async(req, res = response) => {
+    const dni = req.params.dni;
+    // console.log ( 'formulario',req.params.dni)
+    try {
+        const personaDni = await Fc0800.find({ "persona.documento": dni },
+
+            //"nombre apellido documento cuil localidad calle numero img fechaNacimiento sexo",
+            function(err, results) {
+                if (err) {
+                    res.status(500).json({
+                        ok: false,
+                        error: err,
+                    });
+                }
+                res.status(200).json({
+                    ok: true,
+                    results,
+                });
+            }
+        )
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: true,
+            msg: "No existe el  DNI cargado en la base de datos",
+            error,
+        });
+    }
+};
+
+
+
+
+
+
+
 
 module.exports = {
     getTodo,
     getDocumentosColeccion,
     dniGet,
+    form
 };

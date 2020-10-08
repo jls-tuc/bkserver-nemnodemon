@@ -29,20 +29,18 @@ app.use( './server/uploads',serveIndex(__dirname + './server/uploads')); */
   const appRoutes = require("./server/routes/ej.routes");
   const usuarioRoutes = require("./server/routes/commons/usuarios.routes");
   const loginRoutes = require("./server/routes/commons/login.routes");
-  const personaRoutes = require("./server/routes/commons/personas.routes");
+  const personaRoutes = require("./server/routes/personas.routes");
   const laboralRoutes = require("./server/routes/laboral.routes");
   const registroRoutes = require("./server/routes/registro.routes");
   const servWeb = require("./server/routes/ws.routes");
-  const busquedaRoutes = require("./server/routes/commons/busquedas.routes");
-  const localidadesRoutes = require("./server/routes/commons/localidades.routes");
+  const busquedaRoutes = require("./server/routes/busquedas.routes");
+  const localidadesRoutes = require("./server/routes/localidades.routes");
   const form0800Router = require("./server/routes/form0800.routes");
-  const reg_0800Router = require("./server/routes/0800/Reg_llamada.routes");
   const exportRoutes = require("./server/routes/export.routes");
 
   //Rutas para el acceso desde la APP
   app.use("/localidades", localidadesRoutes);
   app.use("/form", form0800Router);
-  app.use("/llamada", reg_0800Router);
   app.use("/usuario", usuarioRoutes);
   app.use("/login", loginRoutes);
   app.use("/persona", personaRoutes);
