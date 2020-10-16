@@ -1,22 +1,14 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const Schema = mongoose.Schema;
-const respSimple = {
-  values: ["si", "no"],
-  message: "{VALUE} no es una resp permitida",
-};
-const respTriple = {
-  values: ["si", "no", " no se"],
-  message: "{VALUE} no es una resp permitida",
-};
 
 const reg_llamadaSchema = new Schema(
   {
     fecha: { type: Date, default: () => Date.now },
     nroForm: { type: Number, unique: true },
-    reg_llamada: [
+    llamada: [
       {
-        nroForm: { type: Number, unique: true },
+        nroForm: { type: Number },
         fecha: { type: Date, default: () => Date.now },
         motivo: { type: String },
         sintomas: { type: String },
@@ -74,10 +66,10 @@ const reg_llamadaSchema = new Schema(
     trabajo: [
       {
         lugar: { type: String },
-        telefonol: { type: String },
-        callel: { type: String },
-        numerol: { type: String },
-        localidadl: { type: String },
+        telefono: { type: String },
+        calle: { type: String },
+        numero: { type: String },
+        localidad: { type: String },
       },
     ],
     usuario: String,

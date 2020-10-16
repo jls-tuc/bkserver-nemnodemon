@@ -10,7 +10,7 @@ const getPersona = async (req, res = response) => {
     sexo, //Mayuscula
   };
   console.log(persona);
-  const personaBd = await Persona.findOne({ documento: documento });
+  const personaBd = await Persona.findOne({ documento: documento, sexo: sexo });
   if (personaBd === null) {
     let renaper = await servicio.getServicioRenaper(persona);
     const { datos } = renaper;

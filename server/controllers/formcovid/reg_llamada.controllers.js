@@ -1,25 +1,30 @@
 const { response } = require("express");
 const moment = require("moment");
 const getNroRegristro = require("../common/solicitudesNro.controllers");
+const orderArray = require("../../../config/helpers/sort");
 const Reg_llamada = require("../../models/formcovid/reg_llamada");
 
 const postForm = async (req, res = response, next) => {
+  console.log("form entrada ", req.body);
   moment.locale("es");
   req.body.fecha = moment().format("YYYY/MM/DD");
-  req.body.reg_llamada[0].fecha = moment().format("YYYY/MM/DD");
+  req.body.llamada.fecha = moment().format("YYYY/MM/DD");
   let ultimoNroRegistro = await Reg_llamada.findOne()
     .sort({ field: "asc", _id: -1 })
     .limit(1);
-  console.log(ultimoNroRegistro);
+  //console.log(ultimoNroRegistro);
   if (ultimoNroRegistro) {
     req.body.nroForm = await getNroRegristro(ultimoNroRegistro.nroForm);
-    console.log("2", req.body.nroForm);
-    req.body.reg_llamada[0].nroForm = 1;
+    //console.log("2", req.body.nroForm);
+    // console.log("2", req.body.llamada.nroForm);
+    req.body.llamada.nroForm = 1;
+    // console.log("2/1", req.body.llamada.nroForm);
   } else {
     req.body.nroForm = 1;
-    req.body.reg_llamada[0].nroForm = 1;
+    req.body.llamada.nroForm = 1;
   }
   const newReg = new Reg_llamada(req.body);
+  console.log("NewReg", newReg);
   try {
     const regBd = await newReg.save();
     res.status(200).json({
@@ -36,35 +41,30 @@ const postForm = async (req, res = response, next) => {
 };
 
 const updateForm = async (req, res = response) => {
-  console.log(req.params.id);
+  // console.log(req.params.id);
+  //console.log("ingresa Reg nuevo", req.body);
   moment.locale("es");
   req.body.fecha = moment().format("YYYY/MM/DD");
-  let ultimoNroRegistro = await Reg_llamada.aggregate([
-    {
-      $unwind: "$reg_llamada",
-    },
-    {
-      $replaceRoot: {
-        newRoot: "$reg_llamada",
-      },
-    },
-  ])
-    .sort({ field: "asc", _id: -1 })
-    .limit(1);
+
+  let registro = await Reg_llamada.findOne({
+    _id: req.params.id,
+  }).lean();
+  let ultimoNroRegistro = registro.llamada;
+  await orderArray(ultimoNroRegistro);
   //console.log("1", ultimoNroRegistro);
-  //console.log("1/2", ultimoNroRegistro[0].nroLlamada);
+  //console.log("1/2", ultimoNroRegistro[0].nroForm);
   if (ultimoNroRegistro.length) {
     req.body.nroForm = await getNroRegristro(ultimoNroRegistro[0].nroForm);
-    console.log("2", req.body.nroForm);
+    // console.log("2", req.body.nroForm);
   } else {
-    req.body.reg_llamada[0].nroForm = 1;
+    req.body.nroForm = 1;
   }
   let newRegistro = req.body;
-  //console.log("antes de guardar", newRegistro)
+  //console.log("antes de guardar", newRegistro);
   try {
-    await Reg_llamada.findOneAndUpdate(
+    await Reg_llamada.findByIdAndUpdate(
       { _id: req.params.id },
-      { $push: { reg_llamada: newRegistro } },
+      { $push: { llamada: newRegistro } },
       {
         new: true,
       }
@@ -72,7 +72,7 @@ const updateForm = async (req, res = response) => {
     //  console.log(registroUpdate);
     res.status(200).json({
       ok: true,
-      msg: "Datos actualizados correctamente",
+      msg: "Registro creado correctamente!",
       registro: newRegistro,
     });
   } catch (error) {
@@ -92,15 +92,17 @@ const getRegistros = async (req, res) => {
   //console.log("hasta", hasta);
   try {
     const [registros, total] = await Promise.all([
-      Reg_llamada.find({}).skip(desde).limit(hasta),
+      Reg_llamada.find({}).lean().skip(desde).limit(hasta), //cuano el array es muy grande es necesario utilizar la propiedad .lean() dentro del find
+
       Reg_llamada.countDocuments(),
     ]);
-
+    // console.log("Registros1", registros);
     res.status(200).json({
       ok: true,
       total,
       registros,
     });
+    //console.log(registros);
   } catch (error) {
     res.status(404).json({
       ok: false,
@@ -139,51 +141,3 @@ module.exports = {
   getRegistros,
   getOneReg,
 };
-
-/* const postForm = async(req, res = response, next) => {
-    moment.locale("es");
-    req.body.fecha = moment().format("YYYY/MM/DD");
-    //console.log(req.body.fecha);
-    //console.log("array", req.body.reg_llamada[0].nroLlamada)
-    let ultimoNroRegistro = await Reg_llamada.aggregate([{
-                $unwind: "$reg_llamada"
-            },
-            {
-                "$replaceRoot": {
-                    "newRoot": "$reg_llamada"
-                }
-            }
-        ])
-        .sort({ field: "asc", _id: -1 })
-        .limit(1);
-    console.log("1", ultimoNroRegistro);
-    //console.log("1/2", ultimoNroRegistro[0].nroLlamada);
-    if (ultimoNroRegistro.length) {
-        req.body.reg_llamada[0].nroLlamada = await getNroRegristro(ultimoNroRegistro[0].nroLlamada);
-        console.log("2", req.body.reg_llamada[0].nroLlamada);
-    } else {
-        req.body.reg_llamada[0].nroLlamada = 1;
-    }
-    const registro = new Reg_llamada(req.body);
-    try {
-
-        const registroDB = await registro.save();
-
-        res.status(400).json({
-            ok: true,
-            msg: "Datos guardos correctamente",
-            reg_0800: registroDB,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            ok: false,
-            msg: "Error al guardar la informacion, verifique los datos",
-            error,
-        });
-    }
-<<<<<<< HEAD
-}; */
-=======
-}; */
->>>>>>> bf153e8855648d5cb0bac6a3e9b71f86bb57f261

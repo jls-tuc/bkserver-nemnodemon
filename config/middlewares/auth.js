@@ -1,10 +1,6 @@
 const jwt = require("jsonwebtoken");
-<<<<<<< HEAD
 const Request = require("express");
 const Usuario = require("../../server/models/usuario");
-=======
-const Request = require('express');
->>>>>>> bf153e8855648d5cb0bac6a3e9b71f86bb57f261
 
 exports.verificaToken = function (req, res, next) {
   let token = req.headers["authorization"];
