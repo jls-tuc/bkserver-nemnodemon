@@ -135,9 +135,51 @@ const getOneReg = async (req, res) => {
   }
 };
 
+const queryForm = async (req, res = response) => {
+  console.log(req.body.fechaDesde);
+  let query;
+  console.log("consulta", query);
+  query = Reg_llamada.find().lean();
+
+  let start;
+  let end;
+
+  if (req.body.fechaDesde && req.body.fechaHasta) {
+    start = req.body.fechaDesde
+      .substring(0, 8)
+      .concat(Number(req.body.fechaDesde.substring(8)));
+    end = req.body.fechaHasta
+      .substring(0, 8)
+      .concat(Number(req.body.fechaHasta.substring(8)) + 1);
+  }
+
+  if (req.body.fechaDesde && req.body.fechaHasta) {
+    query.and([{ fecha: { $gte: new Date(start), $lt: new Date(end) } }]);
+  }
+  if (req.body["localidad"]) {
+    query.or([{ "persona.localidad": req.body["localidad"] }]);
+  }
+  if (req.body["usuario"]) {
+    query.and([{ usuario: req.body.usuario }]);
+  }
+
+  query.exec((err, data) => {
+    if (err) {
+      return next(err);
+    }
+    totalRes = data.length;
+    res.status(200).json({
+      ok: true,
+      totalRes,
+      data,
+    });
+  });
+};
+
 module.exports = {
   postForm,
   updateForm,
   getRegistros,
   getOneReg,
+  queryForm,
 };

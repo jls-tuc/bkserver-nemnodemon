@@ -32,7 +32,7 @@ const usuarioSchema = new Schema(
     },
     lastLogin: {
       type: Date,
-      default: Date.now,
+      default: () => Date.now(),
     },
 
     role: {
